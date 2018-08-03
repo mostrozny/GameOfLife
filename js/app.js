@@ -28,81 +28,73 @@ var GameOfLife = function (boardWidth, boardHeight) {
         });
         };
 
-    this.index = function (x, y) {
-        return x-1 + ((y-1) * this.width);
-    };
+
+    this.position = function(x,y) {
+        var index = x + y * this.width;
+        return this.cells[index];
+    }
     //ustawianie podanym wspolzednym klasy live;
     this.setCellState = function (x, y, state){
-        this.cells[this.index(x,y)].classList.toggle(state);
+        this.position(x, y).classList.toggle(state);
     };
     //utworzenie przykladowego glidera
     this.firstGlider = function (){
-        this.setCellState(3, 1, 'live');
-        this.setCellState(3, 2, 'live');
-        this.setCellState(3, 3, 'live');
-        this.setCellState(2, 3, 'live');
+        this.setCellState(2, 0, 'live');
+        this.setCellState(2, 1, 'live');
+        this.setCellState(2, 2, 'live');
         this.setCellState(1, 2, 'live');
+        this.setCellState(0, 1, 'live');
     };
     var self = this;
     this.computeCellNextState = function(x, y){
-        //Sasiedzi
-        //dla komórki o współrzędnych x, y:
-        //
-        // 1. sąsiad: x-1, y-1
-        // 2. sąsiad: x, y-1
-        // 3. sąsiad: x+1, y-1
-        // 4. sąsiad: x-1, y
-        // 5. sąsiad: x+1, y
-        // 6. sąsiad: x-1, y+1
-        // 7. sąsiad: x, y+1
-        // 8. sąsiad: x+1, y+1
+
+
         var liveNeighbours = 0;
-        if (this.cells[this.index(x-1,y-1)].classList == "live"){
-            liveNeighbours = liveNeighbours + 1;
+        for (var i = y-1; i < y+2; i++) {
+            for (var j = x-1; j < x+2; j++) {
+                if (i!==y || j!==x) {
+                    if (i >= 0 && i < self.height  && j >= 0 && j < self.width) {
+                        if (self.position(j, i).className == 'live') {
+                            liveNeighbours++;
+                        }
+                    }
+                }
+            }
         }
-        if (this.cells[this.index(x,y-1)].classList == "live"){
-            liveNeighbours = liveNeighbours + 1;
-        }
-        if (this.cells[this.index(x+1,y-1)].classList == "live"){
-            liveNeighbours = liveNeighbours + 1;
-        }
-        if (this.cells[this.index(x-1,y)].classList == "live"){
-            liveNeighbours = liveNeighbours + 1;
-        }
-        if (this.cells[this.index(x+1,y)].classList == "live"){
-            liveNeighbours = liveNeighbours + 1;
-        }
-        if (this.cells[this.index(x-1,y+1)].classList == "live"){
-            liveNeighbours = liveNeighbours + 1;
-        }
-        if (this.cells[this.index(x,y+1)].classList == "live"){
-            liveNeighbours = liveNeighbours + 1;
-        }
-        if (this.cells[this.index(x+1,y+1)].classList == "live"){
-            liveNeighbours = liveNeighbours + 1;
-        }
-        console.log(liveNeighbours);
-        var life = 0;
-        if (this.cells[this.index(x, y)].classList == 'live') {
+
+        if (this.position(x, y).className == 'live') {
             if (liveNeighbours < 2) {
-                this.cells[this.index(x,y)].classList.remove('live');
+                return 0;
             } else if (liveNeighbours === 2 || liveNeighbours === 3) {
-                life = 1;
+                return 1;
             }  else if (liveNeighbours > 3) {
-                this.cells[this.index(x,y)].classList.remove('live');
+                return 0;
             }
-        } else if (this.cells[this.index(x, y)].classList !== 'live'){
+        } else {
             if (liveNeighbours === 3) {
-                this.cells[this.index(x,y)].classList.toggle('live');
+                return 1;
+            } else {
+                return 0;
             }
         }
-        return life;
     };
-    this.computeNextGeneration = function (){
-
+   this.computeNextGeneration = function (){
+         this.stateNextGen = [];
+        for (var i=0; i<this.height; i++){
+            for (var j=0; j<this.width; j++){
+                this.stateNextGen.push(this.computeCellNextState(j, i));
+            }
+        }
+        console.log(this.stateNextGen);
     }
-    this.printNextGeneration = function (){
-
+    this.printNextGeneration = function() {
+        self.computeNextGeneration();
+        for (var i = 0; i < self.cells.length; i++) {
+            self.cells[i].classList.remove('live');
+            if (self.stateNextGen[i] === 1) {
+                self.cells[i].classList.add('live');
+            }
+        }
     }
 }
 
@@ -111,4 +103,7 @@ var GameOfLife = function (boardWidth, boardHeight) {
 var game = new GameOfLife(100, 100);
 game.createBoard();
 game.firstGlider();
-game.computeCellNextState(2, 2);
+game.computeNextGeneration();
+document.querySelector('#play').addEventListener('click', function (){
+    game.printNextGeneration();
+})
