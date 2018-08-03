@@ -26,19 +26,19 @@ var GameOfLife = function (boardWidth, boardHeight) {
                 e.classList.toggle('live');
             })
         });
-        };
+    };
 
-
-    this.position = function(x,y) {
+    //wyznaczanie pozycji dla divow
+    this.position = function (x, y) {
         var index = x + y * this.width;
         return this.cells[index];
     }
     //ustawianie podanym wspolzednym klasy live;
-    this.setCellState = function (x, y, state){
+    this.setCellState = function (x, y, state) {
         this.position(x, y).classList.toggle(state);
     };
     //utworzenie przykladowego glidera
-    this.firstGlider = function (){
+    this.firstGlider = function () {
         this.setCellState(2, 0, 'live');
         this.setCellState(2, 1, 'live');
         this.setCellState(2, 2, 'live');
@@ -46,14 +46,14 @@ var GameOfLife = function (boardWidth, boardHeight) {
         this.setCellState(0, 1, 'live');
     };
     var self = this;
-    this.computeCellNextState = function(x, y){
+    this.computeCellNextState = function (x, y) {
 
 
         var liveNeighbours = 0;
-        for (var i = y-1; i < y+2; i++) {
-            for (var j = x-1; j < x+2; j++) {
-                if (i!==y || j!==x) {
-                    if (i >= 0 && i < self.height  && j >= 0 && j < self.width) {
+        for (var i = y - 1; i < y + 2; i++) {
+            for (var j = x - 1; j < x + 2; j++) {
+                if (i !== y || j !== x) {
+                    if (i >= 0 && i < self.height && j >= 0 && j < self.width) {
                         if (self.position(j, i).className == 'live') {
                             liveNeighbours++;
                         }
@@ -67,7 +67,7 @@ var GameOfLife = function (boardWidth, boardHeight) {
                 return 0;
             } else if (liveNeighbours === 2 || liveNeighbours === 3) {
                 return 1;
-            }  else if (liveNeighbours > 3) {
+            } else if (liveNeighbours > 3) {
                 return 0;
             }
         } else {
@@ -78,32 +78,45 @@ var GameOfLife = function (boardWidth, boardHeight) {
             }
         }
     };
-   this.computeNextGeneration = function (){
-         this.stateNextGen = [];
-        for (var i=0; i<this.height; i++){
-            for (var j=0; j<this.width; j++){
+    this.computeNextGeneration = function () {
+        this.stateNextGen = [];
+        for (i = 0; i < this.height; i++) {
+            for (j = 0; j < this.width; j++) {
                 this.stateNextGen.push(this.computeCellNextState(j, i));
             }
         }
-        console.log(this.stateNextGen);
-    }
-    this.printNextGeneration = function() {
+       // console.log(this.stateNextGen);
+    };
+    this.printNextGeneration = function () {
+        var currentPopulation = 0;
         self.computeNextGeneration();
-        for (var i = 0; i < self.cells.length; i++) {
+        for (i = 0; i < self.cells.length; i++) {
             self.cells[i].classList.remove('live');
             if (self.stateNextGen[i] === 1) {
                 self.cells[i].classList.add('live');
+                currentPopulation++;
             }
         }
-    }
-}
 
+        document.getElementById('population').innerText = currentPopulation;
+    };
+    this.startGame = function () {
+        self.pauseGame();
+        self.interval = setInterval(self.printNextGeneration, 300);
+    };
+    this.pauseGame = function () {
+        clearInterval(self.interval);
+    };
+};
 
 
 var game = new GameOfLife(100, 100);
 game.createBoard();
 game.firstGlider();
 game.computeNextGeneration();
-document.querySelector('#play').addEventListener('click', function (){
-    game.printNextGeneration();
-})
+document.querySelector('#play').addEventListener('click', function () {
+    game.startGame();
+});
+document.querySelector('#pause').addEventListener('click', function () {
+    game.pauseGame();
+});
