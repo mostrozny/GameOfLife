@@ -7,9 +7,11 @@ body {
     padding: 0;
     background-color: #cccccc;
 }
+
 .main {
     margin: 0 auto;
 }
+
 .flex {
     margin-top: 20px;
     display: flex;
@@ -17,14 +19,25 @@ body {
     align-items: center;
     flex-direction: column;
 }
+
+#logIn {
+    display: flex;
+    flex-direction: column;
+
+}
+#logIn span {
+    margin: 10px;
+}
 #population {
     text-align: center;
     font-size: 30px;
     text-decoration: deeppink;
 }
+
 #game-set {
     margin: 15px;
 }
+
 #board div {
     width: 10px;
     height: 10px;

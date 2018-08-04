@@ -22,7 +22,7 @@ var GameOfLife = function (boardWidth, boardHeight) {
 
         //ozywianie i usmiercanie komorek
         this.cells.forEach(function (e) {
-            e.addEventListener('mousedown', function () {
+            e.addEventListener('click', function () {
                 e.classList.toggle('live');
             })
         });
@@ -85,7 +85,7 @@ var GameOfLife = function (boardWidth, boardHeight) {
                 this.stateNextGen.push(this.computeCellNextState(j, i));
             }
         }
-       // console.log(this.stateNextGen);
+        // console.log(this.stateNextGen);
     };
     this.printNextGeneration = function () {
         var currentPopulation = 0;
@@ -107,16 +107,21 @@ var GameOfLife = function (boardWidth, boardHeight) {
     this.pauseGame = function () {
         clearInterval(self.interval);
     };
+    this.start = function () {
+        this.createBoard();
+        this.firstGlider();
+        this.computeNextGeneration();
+    }
 };
 
+var userWidth = document.getElementById('userWidthBoard');
 
 var game = new GameOfLife(100, 100);
-game.createBoard();
-game.firstGlider();
-game.computeNextGeneration();
+game.start();
 document.querySelector('#play').addEventListener('click', function () {
     game.startGame();
 });
 document.querySelector('#pause').addEventListener('click', function () {
     game.pauseGame();
+    console.log(userWidth.value);
 });

@@ -1,18 +1,21 @@
 <!DOCTYPE html>
-<html>
-
+<html xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="utf-8">
-    <title>let's play</title>
+    <title>Convay Game of Life</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
-
 <body>
 <div class="main">
     <div class="flex">
+        <section id="logIn">
+            <span><label>Width of board: <input type="number" id="userWidthBoard"></label></span>
+            <span><label>Height of board: </label><input type="number" id="userHeightBoard"></label></span>
+        </section>
         <section id="game-set">
-             <button id="play">Play</button>
-              <button id="pause">Pause</button>
+            <button id="draw">Draw board</button>
+            <button id="play">Play</button>
+            <button id="pause">Pause</button>
         </section>
         <section id="pop-main">
             <h3>Current population:</h3> <span id="population"></span>
@@ -20,7 +23,7 @@
         <section id="board">
         </section>
     </div>
-    </div>
+</div>
 <script src="js/app.js" type="text/javascript"></script>
 </body>
 </html>
