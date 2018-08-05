@@ -114,14 +114,23 @@ var GameOfLife = function (boardWidth, boardHeight) {
     }
 };
 
-var userWidth = document.getElementById('userWidthBoard');
 
-var game = new GameOfLife(100, 100);
-game.start();
+var game;
+document.querySelector('#draw').addEventListener('click', function (){
+    var userWidth = document.getElementById('userWidthBoard').value;
+    var userHeight = document.getElementById('userHeightBoard').value;
+    console.log(userWidth);
+    console.log(userHeight);
+    if (userWidth < 10 || userHeight < 10) {
+        alert("Make a bigger board!");
+    } else {
+        game = new GameOfLife(userWidth, userHeight);
+        game.start();
+    }
+});
 document.querySelector('#play').addEventListener('click', function () {
     game.startGame();
 });
 document.querySelector('#pause').addEventListener('click', function () {
     game.pauseGame();
-    console.log(userWidth.value);
 });
