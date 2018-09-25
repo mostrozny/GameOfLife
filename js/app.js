@@ -121,8 +121,10 @@ document.querySelector('#draw').addEventListener('click', function (){
     var userHeight = document.getElementById('userHeightBoard').value;
     console.log(userWidth);
     console.log(userHeight);
-    if (userWidth < 10 || userHeight < 10) {
+    if (userWidth < 10 || userHeight < 10 ) {
         alert("Make a bigger board!");
+    } else if (userWidth > 150 || userHeight > 150) {
+        alert("Make a smaller board!");
     } else {
         game = new GameOfLife(userWidth, userHeight);
         game.start();
